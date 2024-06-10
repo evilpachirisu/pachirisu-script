@@ -65,6 +65,7 @@ with Python3 installed.
 - Use responsibly and only on systems you have permission to test.
 
 ## Todo
+- Development in C++ so that it can be used on machines where Python is not installed.
 - Add encryption to the communication between server and client for enhanced security.
 - Create a more user-friendly interface for managing multiple connections.
 - Improve error handling and stability.
