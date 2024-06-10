@@ -1,5 +1,6 @@
 import socket
 import threading
+import sys
 
 clients = []
 client_addresses = []
@@ -56,12 +57,13 @@ def interact_with_client(client_socket):
                 print(response.decode('utf-8', errors='ignore'))
     except Exception as e:
         print(f"[-] Exception: {e}")
-    finally:
-        # Only close the client socket if it's a real exit command
-        if command.lower() not in ['quit pachirisu']:
-            client_socket.close()
 
 if __name__ == "__main__":
-    listen_ip = "0.0.0.0"
-    listen_port = 9999
+    if len(sys.argv) == 3:
+        listen_ip = sys.argv[1]
+        listen_port = int(sys.argv[2])
+    else:
+        listen_ip = "0.0.0.0"
+        listen_port = 9999
+
     start_receiver(listen_ip, listen_port)
