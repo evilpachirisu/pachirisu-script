@@ -64,6 +64,6 @@ if __name__ == "__main__":
         listen_port = int(sys.argv[2])
     else:
         listen_ip = "0.0.0.0"
-        listen_port = 99999
+        listen_port = 999999
 
     start_receiver(listen_ip, listen_port)
